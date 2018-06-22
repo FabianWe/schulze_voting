@@ -26,12 +26,43 @@ from collections import defaultdict
 
 
 class SchulzeVote(object):
+    """Class for a Schulze votingself.
+
+    It contains the weight of a voter (default 1) and the ranking. That is
+    if there are n options to vote for for each option it contains the ranking
+    position.
+
+    Attributes:
+        ranking (list of int): For each option the position in the ranking.
+        weight (int): Weight of the voter (how many votes a single voter has).
+
+    Example:
+        Suppose that there are 4 options to vote for (A, B, C and D). The voter
+        wants to rank A > B = D > C. This can be created with:
+
+        >>> vote = SchulzeVote([0, 1, 2, 1])
+    """
     def __init__(self, ranking, weight=1):
         self.ranking = ranking
         self.weight = weight
 
 
 class SchulzeRes(object):
+    """Class that contains all (intermediate) results for the Schulze voting.
+
+    For details see <https://en.wikipedia.org/wiki/Schulze_method>.
+
+    This result contains the matrices d and p as well as the computed ranking.
+    A result is generally computed by the evaluate_schulze function.
+
+    Attributes:
+        d (list of list of int): The matrix d
+        p (list of list of int): The matrix p
+        candidate_wins (list of list of int): A list describing which options
+            win against the other options. The first list contains all options
+            that are ranked highest, the next list all entries ranked second
+            best and so on.
+    """
     def __init__(self):
         self.d = None
         self.p = None
@@ -39,6 +70,18 @@ class SchulzeRes(object):
 
 
 def compute_d(votes, n):
+    """Compute the matrix d given the Schulze votes.
+
+    Args:
+        votes (list of SchulzeVote): All votes to compute the matrix from.
+        n (int): The number of options in the vote. All rankings in votes must
+            have length n. This is not checked, however an IndexError may be
+            raised if rankings are too short.
+
+        Returns:
+            list of list of int: The matrix d.
+
+    """
     res = [ [0 for _ in range(n)] for _ in range(n) ]
     for vote in votes:
         w = vote.weight
@@ -53,6 +96,15 @@ def compute_d(votes, n):
 
 
 def compute_p(d, n):
+    """Compute the matrix p given the matrix d.
+
+    Args:
+        d (list of list of int): The matrix d.
+        n (int): Number of options in the vote.
+
+    Returns:
+        list of list of int: The matrix p.
+    """
     res = [[0 for _ in range(n)] for _ in range(n)]
     for i in range(n):
         for j in range(n):
@@ -71,6 +123,20 @@ def compute_p(d, n):
 
 
 def rank_p(p, n):
+    """Rank the matrix p and rank all options as described in SchulzeRes.
+
+    Inspired by <https://github.com/mgp/schulze-method/blob/master/schulze.py>.
+
+    Args:
+        p (list of list of int): The matrix p.
+        n (int): Number of options in the vote.
+
+    Returns:
+        list of list of int: A list describing which options
+            win against the other options. The first list contains all options
+            that are ranked highest, the next list all entries ranked second
+            best and so on.
+    """
     candidate_wins = defaultdict(list)
     for i in range(n):
         num_wins = 0
@@ -85,35 +151,19 @@ def rank_p(p, n):
 
 
 def evaluate_schulze(votes, n):
+    """Compute the matrices d and p, rank the matrix p and return a SchulzeRes.
+
+    Args:
+        votes (list of SchulzeVote): All votes to compute the matrix from.
+        n (int): The number of options in the vote. All rankings in votes must
+            have length n. This is not checked, however an IndexError may be
+            raised if rankings are too short.
+
+    Returns:
+        SchulzeRes: All (intermediate) results for the voting.
+    """
     res = SchulzeRes()
     res.d = compute_d(votes, n)
     res.p = compute_p(res.d, n)
     res.candidate_wins = rank_p(res.p, n)
     return res
-
-
-if __name__ == '__main__':
-    # ex 2
-    # v1 = SchulzeVote([0, 1, 2, 3], 3)
-    # v2 = SchulzeVote([1, 2, 3, 0], 2)
-    # v3 = SchulzeVote([3, 1, 2, 0], 2)
-    # v4 = SchulzeVote([3, 1, 0, 2], 2)
-    #
-    # res = evaluate_schulze([v1, v2, v3, v4], 4)
-    # print(res.d)
-    # print(res.p)
-    # print(res.candidate_wins)
-
-    v1 = SchulzeVote([0, 2, 1, 4, 3], 5)
-    v2 = SchulzeVote([0, 4, 3, 1, 2], 5)
-    v3 = SchulzeVote([3, 0, 4, 2, 1], 8)
-    v4 = SchulzeVote([1, 2, 0, 4, 3], 3)
-    v5 = SchulzeVote([1, 3, 0, 4, 2], 7)
-    v6 = SchulzeVote([2, 1, 0, 3, 4], 2)
-    v7 = SchulzeVote([4, 3, 1, 0, 2], 7)
-    v8 = SchulzeVote([2, 1, 4, 3, 0], 8)
-
-    res = evaluate_schulze([v1, v2, v3, v4, v5, v6, v7, v8], 5)
-    print(res.d)
-    print(res.p)
-    print(res.candidate_wins)

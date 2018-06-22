@@ -1,5 +1,32 @@
+
 # schulze_voting
-Foooooo
+The Schulze voting procedure is explained in more detail on [Wikipedia](https://en.wikipedia.org/wiki/Schulze_method). This pure python library can be used to evaluate such votings.
+
+## Installation
+Just install via pip:
+```bash
+pip install schulze_voting
+```
+## Creating a Schulze Voting
+This library supports weighted votes, that is each person / group that casts a vote can have a weight > 0 (for example weighted according to a number of people the group represents).
+Suppose that there are 4 options to vote for (*A*, *B*, *C* and *D*). The voter wants to rank *A* > *B* = *D* > *C*. And the voter has a weight of 2. Then this vote can be created with the following code:
+```python
+vote = SchulzeVote([0, 1, 2, 1], 2)
+```
+The lists simply assigns each option a rank (smaller rank means ranked higher). So here *A* has the highest rank, *B* and *D* both have the second highest rank and *C* has the lowest rank.
+
+There a different methods to compute (intermediate) results from lists of such votes:
+
+ - `compute_d`
+ - `compute_p`
+ - `rank_p`
+ - `evaluate_schulze`: Computes the matrices d and p and ranks p.
+
+The ranking of p is returned as a list of list of ints. The first list contains all options that are ranked highest, the next list all entries ranked second best and so on.
+
+So if the result is that A = C > B = D > E the result would contain `[[0, 2], [1, 3], [4]]`.
+
+See the source code for more documentation and examples.
 
 ## License
 **MIT License**
