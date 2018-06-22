@@ -93,11 +93,27 @@ def evaluate_schulze(votes, n):
 
 
 if __name__ == '__main__':
-    v1 = SchulzeVote([0, 1, 2, 3], 3)
-    v2 = SchulzeVote([1, 2, 3, 0], 2)
-    v3 = SchulzeVote([3, 1, 2, 0], 2)
-    v4 = SchulzeVote([3, 1, 0, 2], 2)
+    # ex 2
+    # v1 = SchulzeVote([0, 1, 2, 3], 3)
+    # v2 = SchulzeVote([1, 2, 3, 0], 2)
+    # v3 = SchulzeVote([3, 1, 2, 0], 2)
+    # v4 = SchulzeVote([3, 1, 0, 2], 2)
+    #
+    # res = evaluate_schulze([v1, v2, v3, v4], 4)
+    # print(res.d)
+    # print(res.p)
+    # print(res.candidate_wins)
 
-    res = evaluate_schulze([v1, v2, v3, v4], 4)
+    v1 = SchulzeVote([0, 2, 1, 4, 3], 5)
+    v2 = SchulzeVote([0, 4, 3, 1, 2], 5)
+    v3 = SchulzeVote([3, 0, 4, 2, 1], 8)
+    v4 = SchulzeVote([1, 2, 0, 4, 3], 3)
+    v5 = SchulzeVote([1, 3, 0, 4, 2], 7)
+    v6 = SchulzeVote([2, 1, 0, 3, 4], 2)
+    v7 = SchulzeVote([4, 3, 1, 0, 2], 7)
+    v8 = SchulzeVote([2, 1, 4, 3, 0], 8)
+
+    res = evaluate_schulze([v1, v2, v3, v4, v5, v6, v7, v8], 5)
     print(res.d)
     print(res.p)
+    print(res.candidate_wins)
