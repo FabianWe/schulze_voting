@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright (c) 2018 Fabian Wenzelmann
+# Copyright (c) 2018 - 2020 Fabian Wenzelmann
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ from collections import defaultdict
 
 
 class SchulzeVote(object):
-    """Class for a Schulze votingself.
+    """Class for a Schulze voting.
 
     It contains the weight of a voter (default 1) and the ranking. That is
     if there are n options to vote for for each option it contains the ranking
